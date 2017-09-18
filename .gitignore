@@ -1,0 +1,8 @@
+# emacs backup files:
+\#*\#
+.\#*
+*~
+# object files
+*.o
+# python
+*/__pycache__/*
