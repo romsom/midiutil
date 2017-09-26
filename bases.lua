@@ -1,8 +1,8 @@
 -- generic class for device
 local Device = {
-   name = "Generic MIDI Device",
+   name = "Generic (MIDI) Device",
    patches = {},
-   midiports = {
+   ports = {
       input = -1,
       output = -1,
    },
@@ -12,6 +12,7 @@ local Device = {
 function Device:new ()
    o = {}
    setmetatable(o, self)
+   -- TODO register in global device table?
    return o
 end
 
@@ -20,6 +21,14 @@ function Device:dump_request (patchrange)
 end
 
 function Device:send_patches (patchdict)
+   -- not implemented
+end
+
+function Device:send_active_patch (patch)
+   -- not implemented
+end
+
+function Device:request_active_patch (patch)
    -- not implemented
 end
 
@@ -87,8 +96,14 @@ function Patch:__eq (other)
    return true
 end
 
+local Parameter = {
+
+
+}
+
 bases = {
    ["Device"] = Device,
-   ["Patch"] = Patch
+   ["Patch"] = Patch,
+   -- TODO ["Parameter"] = Parameter
 }
 return bases
