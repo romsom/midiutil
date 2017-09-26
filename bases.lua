@@ -34,12 +34,30 @@ end
 
 -- generic class for patch
 local Patch = {
-   params = {}
+   params = {
+      send = {},
+      recieve = {}
+   }
+   lut = {
+      send = {},
+      recieve = {}
+   }
 }
+
+function Patch:buildLUT ()
+   for k,v in pairs(self.params['recieve']) do
+      self.lut['recieve'][k] = v
+   end
+   
+   for k,v in pairs(self.params['send']) do
+      -- TODO occurs check
+      self.lut['send'][v] = k
+   end
+end
 
 function Patch:new ()
    o = {}
-   setmetatable(s, self)
+   setmetatable(o, self)
    return o
 end
 
