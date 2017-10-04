@@ -2,11 +2,22 @@ import mididings as md
 from common_map import *
 #from functools import zip
 
+def gen_param_sysex(ev, group, parameter):
+    return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x10, group, parameter, ev.value & 0x7f, 0xf7])
+def gen_dump_rq_sysex(ev, format):
+    print("asdas")
+    ev.type = md.SYSEX
+    ev.data1 += 10
+    return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x20, format & 0x7f, 0xf7])
+def TX7_DumpRequest(format=0):
+    return md.Process(lambda ev: gen_dump_rq_sysex(ev, format))
+
 class TX7_SXParamChange:
     def __init__(self, group, h, parameter, max=99, min=0):
         # group in range(0,5), h in [0,1], parameter in range(0,128)
         #print("creating sysex parameter object: {}".format(parameter))
-        self.generator = md.SysEx([0xf0, 0x43, 0x10, 0, group * 4 + h, parameter, 0xf7])
+        #self.generator = md.SysEx([0xf0, 0x43, 0x10, 0, group * 4 + h, parameter, 0xf7])
+        self.generator = md.Process(lambda ev: gen_param_sysex(ev, group*4 + h, parameter))
         self.filter = md.SysExFilter([0xf0, 0x43]) # at the moment we can only match up to the last byte, pattern matching would be nice though
         self.min = min
         self.max = max

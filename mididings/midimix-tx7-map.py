@@ -3,7 +3,7 @@
 import mididings as md
 import mididings.extra.osc as mdosc
 from akai_midimix_map import Akai_MidiMix
-from yamaha_tx7_map import TX7_Patch
+from yamaha_tx7_map import TX7_Patch, TX7_DumpRequest
 # sd: source ding, dd: destination ding
 
 akai = Akai_MidiMix()
@@ -19,9 +19,11 @@ md.config(backend='jack-rt',
                      ('control_out', 'a2j:MIDI Mix.*MIDI 1'),
                      ('synth_out', 'a2j:USB MIDI Interface.*MIDI 1')])
 
+control_switches = [md.KeyFilter(notes=[27]) >> (TX7_DumpRequest() >> md.Port('synth_out')),
+                    md.KeyFilter(notes=[25]) >> md.SceneSwitch(offset=-1),
+                    md.KeyFilter(notes=[26]) >> md.SceneSwitch(offset=1)]
 
-control = md.PortFilter('control_in') >> akai.Print()
-#control = md.PortFilter('control_in') >> md.Print('control')
+control = md.PortFilter('control_in') >> md.Filter(md.NOTEON) >> control_switches #control = md.PortFilter('control_in') >> md.Print('control')
 pre = md.Print('input') # bank/page buttons, solo button
 post = md.Print('output')
 
@@ -53,12 +55,12 @@ def fill_pages():
 
 # controller mappings
 def create_scene_wrapper(control_scene):
-    #sc = md.Print('scene_input') >> [md.PortFilter('control_in') >> md.KeyFilter(notes=[25,26,27]) >> control_scene >>
-    #      md.PortFilter('keys_in') >> md.Print('keys') >> md.Port('synth_out'),
-    #      md.PortFilter('synth_in') >> md.Print('synth')]
-    #return sc
+    sc = [md.PortFilter('control_in') >> ~md.KeyFilter(notes=[25,26,27]) >> control_scene >> md.Port('synth_out'),
+          md.PortFilter('keys_in') >> md.Print('keys') >> md.Port('synth_out'),
+          md.PortFilter('synth_in') >> md.Print('synth')]
+    return sc
     #return md.Print('scene_input') >> control_scene
-    return control_scene
+    #return control_scene
 
 def create_scenes():
     scs = {}
@@ -66,21 +68,21 @@ def create_scenes():
         #2: md.Scene(, akai.Map(pages[1], yam)),
         #3: md.Scene('frequency', akai.Map(pages[2], yam))
     #]
-    for i, (name, page) in enumerate(fill_pages().items()):
+    for i, (name, page) in enumerate(sorted(fill_pages().items(), key=lambda x: x[0])):
         print("index: {}; name: {}; page:".format(i, name))
         for p in sorted(page):
             print('{}: {}'.format(p, page[p]))
         print('map:')
         for m in akai.Map(page, yam):
             print(m)
-        scs[i] = md.Scene(name, create_scene_wrapper(akai.Map(page, yam)))
+        scs[i+1] = md.Scene(name, create_scene_wrapper(akai.Map(page, yam)))# index < 1 will crash mididings
     return scs
 
 scenes = create_scenes()
 print(scenes)
 
 # enable OSC Interface for livedings
-#md.hook(mdosc.OSCInterface(56418, 56419))
+md.hook(mdosc.OSCInterface(56418, 56419))
 
 md.run(scenes,
        control=control,
