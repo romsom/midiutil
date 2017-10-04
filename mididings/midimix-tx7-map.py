@@ -11,7 +11,7 @@ akai = Akai_MidiMix()
 # for now we use only one patch
 yam = TX7_Patch()
 
-md.config(backend='jack-rt',
+md.config(backend='jack',
           client_name='control-map',
           in_ports=[('keys_in', 'a2j:Axiom.*MIDI 1'),
                     ('control_in', 'a2j:MIDI Mix.*MIDI 1'),
@@ -65,10 +65,6 @@ def create_scene_wrapper(control_scene):
 
 def create_scenes():
     scs = {}
-        #1: md.Scene(, akai.Map(pages[0], yam)),
-        #2: md.Scene(, akai.Map(pages[1], yam)),
-        #3: md.Scene('frequency', akai.Map(pages[2], yam))
-    #]
     for i, (name, page) in enumerate(sorted(fill_pages().items(), key=lambda x: x[0])):
         print("index: {}; name: {}; page:".format(i, name))
         for p in sorted(page):
@@ -80,7 +76,7 @@ def create_scenes():
     return scs
 
 scenes = create_scenes()
-print(scenes)
+#print(scenes)
 
 # enable OSC Interface for livedings
 md.hook(mdosc.OSCInterface(56418, 56419))
