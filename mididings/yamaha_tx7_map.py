@@ -11,6 +11,8 @@ def gen_dump_rq_sysex(ev, format):
     return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x20, format & 0x7f, 0xf7])
 def TX7_DumpRequest(format=0):
     return md.Process(lambda ev: gen_dump_rq_sysex(ev, format))
+def TX7_SysExFilter():
+    return md.SysExFilter([0xf0, 0x43]) # at the moment we can only match up to the last byte, pattern matching would be nice though
 
 class TX7_SXParamChange:
     def __init__(self, group, h, parameter, max=99, min=0):
@@ -18,7 +20,7 @@ class TX7_SXParamChange:
         #print("creating sysex parameter object: {}".format(parameter))
         #self.generator = md.SysEx([0xf0, 0x43, 0x10, 0, group * 4 + h, parameter, 0xf7])
         self.generator = md.Process(lambda ev: gen_param_sysex(ev, group*4 + h, parameter))
-        self.filter = md.SysExFilter([0xf0, 0x43]) # at the moment we can only match up to the last byte, pattern matching would be nice though
+        self.filter = TX7_SysExFilter() # TODO distinguish voice dumps and parameter changes (needs pattern matching though)
         self.min = min
         self.max = max
 class TX7_Patch:

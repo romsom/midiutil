@@ -28,4 +28,4 @@ class Akai_MidiMix:
 
     def Map(self, page, device):
         params = device.parameters()
-        return [ev.filter >> params[page[name]].generator for ctrl in self.ctrls() for name, ev in ctrl.items() if  name in page]
+        return [ev.filter >> md.Print(name) >> params[page[name]].generator for ctrl in self.ctrls() for name, ev in ctrl.items() if  name in page]

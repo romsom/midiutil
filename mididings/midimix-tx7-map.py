@@ -3,7 +3,8 @@
 import mididings as md
 import mididings.extra.osc as mdosc
 from akai_midimix_map import Akai_MidiMix
-from yamaha_tx7_map import TX7_Patch, TX7_DumpRequest
+from yamaha_tx7_map import TX7_Patch, TX7_DumpRequest, TX7_SysExFilter
+from common_map import SaveSysEx
 # sd: source ding, dd: destination ding
 
 akai = Akai_MidiMix()
@@ -19,7 +20,7 @@ md.config(backend='jack-rt',
                      ('control_out', 'a2j:MIDI Mix.*MIDI 1'),
                      ('synth_out', 'a2j:USB MIDI Interface.*MIDI 1')])
 
-control_switches = [md.KeyFilter(notes=[27]) >> (TX7_DumpRequest() >> md.Port('synth_out')),
+control_switches = [md.KeyFilter(notes=[27]) >> (TX7_DumpRequest(0) >> md.Port('synth_out')),
                     md.KeyFilter(notes=[25]) >> md.SceneSwitch(offset=-1),
                     md.KeyFilter(notes=[26]) >> md.SceneSwitch(offset=1)]
 
@@ -40,8 +41,8 @@ def fill_pages():
             ps['op[1-3]_eg']['pot_{}_{}'.format(egi+4, op)] = 'op{}_eg_level_{}'.format(op+1, egi+1)
     for op in range(3,6):
         for egi in range(0,4):
-            ps['op[4-6]_eg']['pot_{}_{}'.format(egi, op)] = 'op{}_eg_rate_{}'.format(op+1, egi+1)
-            ps['op[4-6]_eg']['pot_{}_{}'.format(egi+4, op)] = 'op{}_eg_level_{}'.format(op+1, egi+1)
+            ps['op[4-6]_eg']['pot_{}_{}'.format(egi, op-3)] = 'op{}_eg_rate_{}'.format(op+1, egi+1)
+            ps['op[4-6]_eg']['pot_{}_{}'.format(egi+4, op-3)] = 'op{}_eg_level_{}'.format(op+1, egi+1)
     # freq
     for op in range(0,6):
         ps['frequency']['pot_{}_0'.format(op)] = 'op{}_oscillator_detune'.format(op+1)
@@ -57,7 +58,7 @@ def fill_pages():
 def create_scene_wrapper(control_scene):
     sc = [md.PortFilter('control_in') >> ~md.KeyFilter(notes=[25,26,27]) >> control_scene >> md.Port('synth_out'),
           md.PortFilter('keys_in') >> md.Print('keys') >> md.Port('synth_out'),
-          md.PortFilter('synth_in') >> md.Print('synth')]
+          md.PortFilter('synth_in') >> md.Print('synth') >> TX7_SysExFilter() >> SaveSysEx('dx7_patch') >> md.Discard()]
     return sc
     #return md.Print('scene_input') >> control_scene
     #return control_scene
