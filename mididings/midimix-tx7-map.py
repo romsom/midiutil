@@ -25,7 +25,7 @@ control_switches = [md.KeyFilter(notes=[27]) >> (TX7_DumpRequest(0) >> md.Port('
                     md.KeyFilter(notes=[26]) >> md.SceneSwitch(offset=1)]
 
 control = md.PortFilter('control_in') >> md.Filter(md.NOTEON) >> control_switches #control = md.PortFilter('control_in') >> md.Print('control')
-pre = md.Print('input') # bank/page buttons, solo button
+pre = None #md.Print('input') # bank/page buttons, solo button
 post = md.Print('output')
 
 def fill_pages():
@@ -33,7 +33,14 @@ def fill_pages():
     These are dicts as well, that map input_controller_names to parameter_names"""
     ps = {'op[1-3]_eg': {},
           'op[4-6]_eg': {},
-          'frequency':  {}}
+          'frequency':  {},
+          'pitch_eg/lfo': {},
+          'op_mod_sensitivity': {},
+          'keyboard_level_scaling_depth': {},
+          'keyboard_level_scaling_curve': {},
+          'name': {},
+          'performance': {},
+    }
     # EG
     for op in range(0,3):
         for egi in range(0,4):
@@ -48,11 +55,75 @@ def fill_pages():
         ps['frequency']['pot_{}_0'.format(op)] = 'op{}_oscillator_detune'.format(op+1)
         ps['frequency']['pot_{}_1'.format(op)] = 'op{}_oscillator_frequency_fine'.format(op+1)
         ps['frequency']['pot_{}_2'.format(op)] = 'op{}_oscillator_frequency_coarse'.format(op+1)
-    # volume on all pages
+    ps['frequency']['pot_6_0'.format(op)] = 'algorithm_select'
+    ps['frequency']['pot_6_1'.format(op)] = 'oscillator_key_sync'
+    ps['frequency']['pot_6_2'.format(op)] = 'transpose'
+    #ps['frequency']['pot_6_1'.format(op)] = 'oscillator_key_sync' # use button!
+    # pitch eg/lfo
+    for egi in range(0,4):
+        ps['pitch_eg/lfo']['pot_{}_0'.format(egi)] = 'pitch_eg_rate_{}'.format(egi+1)
+        ps['pitch_eg/lfo']['pot_{}_0'.format(egi+4)] = 'pitch_eg_level_{}'.format(egi+1)
+    
+    ps['pitch_eg/lfo']['pot_0_1'.format(egi)] = 'lfo_speed'
+    ps['pitch_eg/lfo']['pot_1_1'.format(egi)] = 'lfo_delay'
+    ps['pitch_eg/lfo']['pot_2_1'.format(egi)] = 'lfo_pitch_modulation_depth'
+    ps['pitch_eg/lfo']['pot_3_1'.format(egi)] = 'lfo_pitch_modulation_sensitivity'
+    ps['pitch_eg/lfo']['pot_4_1'.format(egi)] = 'lfo_amplitude_modulation_depth'
+    ps['pitch_eg/lfo']['pot_5_1'.format(egi)] = 'lfo_key_sync'
+    ps['pitch_eg/lfo']['pot_6_1'.format(egi)] = 'lfo_wave'
+    #for op in range(0,6):
+    #    ps['pitch_eg']['pot_{}_1'.format(op)] = 'op{}_oscillator_'.format(op+1)
+    #ps['pitch_eg']['pot_2_0'] = 'algorithm_select'
+    #ps['pitch_eg']['pot_2_1'] = 'algorithm_select'
+    # op_mode_sensitivity
+    for op in range(0,6):
+        fs = 'op{}_{}_sensitivity'.format(op+1, '{}')
+        ps['op_mod_sensitivity']['pot_{}_0'.format(op)] = fs.format('amplitude_modulation')
+        ps['op_mod_sensitivity']['pot_{}_1'.format(op)] = fs.format('key_velocity')
+        #ps['op_mod_sensitivity']['pot_{}_2'.format(op)] = fs.format('')
+    # kls_depth
+    for op in range(0,6):
+        fs = 'keyboard_level_scaling{}'
+        ps[fs.format('_depth')]['pot_{}_0'.format(op)] = 'op{}_'.format(op+1) + fs.format('_break_point')
+        ps[fs.format('_depth')]['pot_{}_1'.format(op)] = 'op{}_'.format(op+1) + fs.format('_left_depth')
+        ps[fs.format('_depth')]['pot_{}_2'.format(op)] = 'op{}_'.format(op+1) + fs.format('_right_depth')
+
+    # kls_curve
+    for op in range(0,6):
+        fs = 'keyboard_level_scaling{}'
+        ps[fs.format('_curve')]['pot_{}_0'.format(op)] = 'op{}_'.format(op+1) + 'keyboard_rate_scaling'
+        ps[fs.format('_curve')]['pot_{}_1'.format(op)] = 'op{}_'.format(op+1) + fs.format('_left_curve')
+        ps[fs.format('_curve')]['pot_{}_2'.format(op)] = 'op{}_'.format(op+1) + fs.format('_right_curve')
+
+    for i in range(0,8):
+        ps['name']['pot_{}_0'.format(i)] = 'voice_name_{}'.format(i+1)
+    for i in range(0,2):
+        ps['name']['pot_{}_1'.format(i)] = 'voice_name_{}'.format(i+1+8)
+
+    # performance parameters
+    ps['performance']['pot_0_0'] = 'poly/mono'
+    ps['performance']['pot_1_0'] = 'pitch_bend_range'
+    ps['performance']['pot_2_0'] = 'pitch_bend_step'
+    ps['performance']['pot_3_0'] = 'portamento_mode'
+    ps['performance']['pot_4_0'] = 'portamento/glissando'
+    ps['performance']['pot_5_0'] = 'portamento_time'
+    ps['performance']['pot_0_1'] = 'modulation_wheel_sensitivity'
+    ps['performance']['pot_0_2'] = 'modulation_wheel_assign'
+    ps['performance']['pot_1_1'] = 'foot_controller_sensitivity'
+    ps['performance']['pot_1_2'] = 'foot_controller_assign'
+    ps['performance']['pot_2_1'] = 'breath_controller_sensitivity'
+    ps['performance']['pot_2_2'] = 'breath_controller_assign'
+    ps['performance']['pot_3_1'] = 'after_touch_sensitivity'
+    ps['performance']['pot_3_2'] = 'after_touch_assign'
+    # global params (sliders)
     for p in ps.values():
         for op in range(0,6):
             p['slider_{}'.format(op)] = 'op{}_operator_output_level'.format(op+1)
+        p['slider_6'] = 'feedback'
+        p['slider_7'] = 'lfo_speed'
     return ps
+
+
 
 # controller mappings
 def create_scene_wrapper(control_scene):
