@@ -71,7 +71,7 @@ class TX7_Patch:
         self.params['pitch_eg_rate_2'] = TX7_SXParamChange(0, 0, 127, 99)
         self.params['pitch_eg_rate_3'] = TX7_SXParamChange(0, 1, 0, 99)
         self.params['pitch_eg_rate_4'] = TX7_SXParamChange(0, 1, 1, 99)
-        self.params['pitch_eg_level_1'] = TX7_SXParamChange(0, 1, 2, 99)
+        self.params['pitch_eg_level_1'] = TX7_SXParamChange(0, 1, 2, 99) # normal at 50/0x32
         self.params['pitch_eg_level_2'] = TX7_SXParamChange(0, 1, 3, 99)
         self.params['pitch_eg_level_3'] = TX7_SXParamChange(0, 1, 4, 99)
         self.params['pitch_eg_level_4'] = TX7_SXParamChange(0, 1, 5, 99)
@@ -87,7 +87,7 @@ class TX7_Patch:
         # tri, saw down, saw up, square, sine, s/h
         self.params['lfo_wave'] = TX7_SXParamChange(0, 1, 14, 5)
         self.params['lfo_pitch_modulation_sensitivity'] = TX7_SXParamChange(0, 1, 15, 7)
-        self.params['transpose'] = TX7_SXParamChange(0, 1, 16, 48)
+        self.params['transpose'] = TX7_SXParamChange(0, 1, 16, 48) # normal at 24/0x18
 
         self.params['voice_name_1'] = TX7_SXParamChange(0, 1, 17) # ascii
         self.params['voice_name_2'] = TX7_SXParamChange(0, 1, 18)

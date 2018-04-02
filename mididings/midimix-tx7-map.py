@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import mididings as md
 import mididings.extra.osc as mdosc
@@ -11,14 +11,18 @@ akai = Akai_MidiMix()
 # for now we use only one patch
 yam = TX7_Patch()
 
+synth_port_pattern = r'(a2j:USB MIDI Interface.*MIDI 1)|(a2j:Ploytec.*: \[3\].*)'
+keys_port_pattern = r'(a2j:Axiom.*MIDI 1)|(a2j:RtMidi.*ebus_bridge)'
+control_port_pattern = r'a2j:MIDI Mix.*MIDI 1'
+
 md.config(backend='jack',
           client_name='control-map',
-          in_ports=[('keys_in', 'a2j:Axiom.*MIDI 1'),
-                    ('control_in', 'a2j:MIDI Mix.*MIDI 1'),
-                    ('synth_in', 'a2j:USB MIDI Interface.*MIDI 1')],
-          out_ports=[('keys_out', 'a2j:Axiom.*MIDI 1'),
-                     ('control_out', 'a2j:MIDI Mix.*MIDI 1'),
-                     ('synth_out', 'a2j:USB MIDI Interface.*MIDI 1')])
+          in_ports=[('keys_in', keys_port_pattern),
+                    ('control_in', control_port_pattern),
+                    ('synth_in', synth_port_pattern)],
+          out_ports=[('keys_out', keys_port_pattern),
+                     ('control_out', control_port_pattern),
+                     ('synth_out', synth_port_pattern)])
 
 control_switches = [md.KeyFilter(notes=[27]) >> (TX7_DumpRequest(0) >> md.Port('synth_out')),
                     md.KeyFilter(notes=[25]) >> md.SceneSwitch(offset=-1),
@@ -26,7 +30,7 @@ control_switches = [md.KeyFilter(notes=[27]) >> (TX7_DumpRequest(0) >> md.Port('
 
 control = md.PortFilter('control_in') >> md.Filter(md.NOTEON) >> control_switches #control = md.PortFilter('control_in') >> md.Print('control')
 pre = None #md.Print('input') # bank/page buttons, solo button
-post = md.Print('output')
+post = None #md.Print('output')
 
 def fill_pages():
     """returns a dict of page descriptions.
@@ -64,13 +68,15 @@ def fill_pages():
         ps['pitch_eg/lfo']['pot_{}_0'.format(egi)] = 'pitch_eg_rate_{}'.format(egi+1)
         ps['pitch_eg/lfo']['pot_{}_0'.format(egi+4)] = 'pitch_eg_level_{}'.format(egi+1)
     
-    ps['pitch_eg/lfo']['pot_0_1'.format(egi)] = 'lfo_speed'
-    ps['pitch_eg/lfo']['pot_1_1'.format(egi)] = 'lfo_delay'
-    ps['pitch_eg/lfo']['pot_2_1'.format(egi)] = 'lfo_pitch_modulation_depth'
-    ps['pitch_eg/lfo']['pot_3_1'.format(egi)] = 'lfo_pitch_modulation_sensitivity'
-    ps['pitch_eg/lfo']['pot_4_1'.format(egi)] = 'lfo_amplitude_modulation_depth'
-    ps['pitch_eg/lfo']['pot_5_1'.format(egi)] = 'lfo_key_sync'
-    ps['pitch_eg/lfo']['pot_6_1'.format(egi)] = 'lfo_wave'
+    ps['pitch_eg/lfo']['pot_0_1'] = 'lfo_speed'
+    ps['pitch_eg/lfo']['pot_1_1'] = 'lfo_delay'
+    ps['pitch_eg/lfo']['pot_2_1'] = 'lfo_pitch_modulation_depth'
+    ps['pitch_eg/lfo']['pot_3_1'] = 'lfo_pitch_modulation_sensitivity'
+    ps['pitch_eg/lfo']['pot_4_1'] = 'lfo_amplitude_modulation_depth'
+    ps['pitch_eg/lfo']['pot_5_1'] = 'lfo_key_sync'
+    ps['pitch_eg/lfo']['pot_6_1'] = 'lfo_wave'
+    for op in range(0,6):
+        ps['pitch_eg/lfo']['pot_{}_2'.format(op)] = 'op{}_oscillator_mode'.format(op+1)
     #for op in range(0,6):
     #    ps['pitch_eg']['pot_{}_1'.format(op)] = 'op{}_oscillator_'.format(op+1)
     #ps['pitch_eg']['pot_2_0'] = 'algorithm_select'
