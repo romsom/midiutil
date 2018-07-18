@@ -2,6 +2,12 @@ import mididings as md
 from common_map import *
 #from functools import zip
 
+VCED = (4, 2) # Voice Edit
+ACED = (4, 3)
+PCED = (4, 3) # same as ACED
+REMOTE_SWITCH = (0,0) # TX81, data=0 -> off, data=0x7f -> on
+SYS = (4, 0)
+
 def gen_param_sysex_scaled(ev, group, parameter, scale, limit, source_offset, target_offset):
     val = (ev.value - source_offset) // scale + target_offset
     if val > limit:
@@ -9,37 +15,42 @@ def gen_param_sysex_scaled(ev, group, parameter, scale, limit, source_offset, ta
     return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x10, group, parameter, val & 0x7f, 0xf7])
 def gen_param_sysex(ev, group, parameter):
     return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x10, group, parameter, ev.value & 0x7f, 0xf7])
-def gen_dump_rq_sysex(ev, format):
+def gen_dump_rq_sysex(ev, format, channel):
     ev.type = md.SYSEX
-    return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x20, format & 0x7f, 0xf7])
-def YS200_DumpRequest(format=0):
-    return md.Process(lambda ev: gen_dump_rq_sysex(ev, format))
+    return md.event.SysExEvent(ev.port, [0xf0, 0x43, channel, format & 0x7f, 0xf7])
+def YS200_DumpRequest(format=0, channel=0):
+    return md.Process(lambda ev: gen_dump_rq_sysex(ev, format, channel))
 def YS200_SysExFilter():
     return md.SysExFilter([0xf0, 0x43]) # at the moment we can only match up to the last byte, pattern matching would be nice though
 
 class YS200_SXParamChange:
-    def __init__(self, group, h, parameter, max=127, min=0):
-        # group in range(0,5), h in [0,1], parameter in range(0,128)
+    def __init__(self, group, subgroup, parameter, max=127, min=0, channel=0):
+        # group in range(0,5), subgroup in [0,1], parameter in range(0,128)
+        # channel is the configured basic receive channel of the device
         #print("creating sysex parameter object: {}".format(parameter))
-        #self.generator = md.SysEx([0xf0, 0x43, 0x10, 0, group * 4 + h, parameter, 0xf7])
+        #self.generator = md.SysEx([0xf0, 0x43, 0x10, 0, group * 4 + subgroup, parameter, 0xf7])
         self.parameter = parameter
         self.group = group
-        self.h = h
+        self.subgroup = subgroup
         self.filter = YS200_SysExFilter() # TODO distinguish voice dumps and parameter changes (needs pattern matching though)
         self.min = min
         self.max = max
     def Generator(self, min=None, max=None):
         if (min is None and max is None) or (min == self.min and max == self.max) :
-            return md.Process(lambda ev: gen_param_sysex(ev, self.group*4 + self.h, self.parameter))
+            return md.Process(lambda ev: gen_param_sysex(ev, self.group*4 + self.subgroup, self.parameter))
         if min is None:
             min = self.min
         if max is None:
             max = self.max
         n_source = max + 1 - min
         n_target = self.max + 1 - self.min
-        return md.Process(lambda ev: gen_param_sysex_scaled(ev, self.group*4 + self.h, self.parameter,
+        return md.Process(lambda ev: gen_param_sysex_scaled(ev, self.group*4 + self.subgroup, self.parameter,
                                                             n_source // n_target, self.max, min, self.min))
 class YS200_Patch:
+    # TODO:
+    # - base on generic Patch (send, request, dump, load, serialize, deserialize)
+    # - separate value, ParamChange, ParamRequest
+    # - manage active and inactive patches
     def __init__(self, idx=None):
         self.params = {}
         for op in range(0,6):
