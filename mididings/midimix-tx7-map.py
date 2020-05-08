@@ -59,9 +59,9 @@ def fill_pages():
         ps['frequency']['pot_{}_0'.format(op)] = 'op{}_oscillator_detune'.format(op+1)
         ps['frequency']['pot_{}_1'.format(op)] = 'op{}_oscillator_frequency_fine'.format(op+1)
         ps['frequency']['pot_{}_2'.format(op)] = 'op{}_oscillator_frequency_coarse'.format(op+1)
-    ps['frequency']['pot_6_0'.format(op)] = 'algorithm_select'
-    ps['frequency']['pot_6_1'.format(op)] = 'oscillator_key_sync'
-    ps['frequency']['pot_6_2'.format(op)] = 'transpose'
+    ps['frequency']['pot_6_0'] = 'algorithm_select'
+    ps['frequency']['pot_6_1'] = 'oscillator_key_sync'
+    ps['frequency']['pot_6_2'] = 'transpose'
     #ps['frequency']['pot_6_1'.format(op)] = 'oscillator_key_sync' # use button!
     # pitch eg/lfo
     for egi in range(0,4):
