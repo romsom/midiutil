@@ -28,7 +28,7 @@ class TX7_SXParamChange:
         self.filter = TX7_SysExFilter() # TODO distinguish voice dumps and parameter changes (needs pattern matching though)
         self.min = min
         self.max = max
-    def Generator(self, min=None, max=None):
+    def event(self, min=None, max=None):
         if (min is None and max is None) or (min == self.min and max == self.max) :
             return md.Process(lambda ev: gen_param_sysex(ev, self.group*4 + self.h, self.parameter))
         if min is None:
