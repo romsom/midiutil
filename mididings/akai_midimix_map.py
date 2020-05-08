@@ -26,7 +26,3 @@ class Akai_MidiMix:
     def Print(self):
         return [ev.filter >> md.Print(name) for ctrl in self.ctrls() for name, ev in ctrl.items()] #+ [md.Print('akai')]
 
-    def Map(self, mapping, device):
-        '''Map control events of this controller to generators of device using mapping information in mapping.'''
-        params = device.parameters()
-        return [ev.filter >> params[mapping[name]].event(ev.min, ev.max) >> md.Print(mapping[name]) for name, ev in self.ctrls().items() if name in mapping]

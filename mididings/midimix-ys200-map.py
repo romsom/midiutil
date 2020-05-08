@@ -4,7 +4,7 @@ import mididings as md
 import mididings.extra.osc as mdosc
 from akai_midimix_map import Akai_MidiMix
 from yamaha_ys200_map import YS200_Patch, YS200_DumpRequest, YS200_SysExFilter
-from common_map import SaveSysEx
+from common_map import SaveSysEx, map_events, create_scenes
 # sd: source ding, dd: destination ding
 
 akai = Akai_MidiMix()
@@ -132,7 +132,8 @@ def fill_pages():
 
 
 # controller mappings
-def create_scene_wrapper(control_scene):
+def create_scene(control_scene):
+    '''Create a complete scene from a control event list returned from map_events'''
     sc = [md.PortFilter('control_in') >> ~md.KeyFilter(notes=[25,26,27]) >> control_scene >> md.Port('synth_out'),
           md.PortFilter('keys_in') >> md.Print('keys') >> md.Port('synth_out'),
           md.PortFilter('synth_in') >> md.Print('synth') >> TX7_SysExFilter() >> SaveSysEx('dx7_patch') >> md.Discard()]
@@ -140,19 +141,8 @@ def create_scene_wrapper(control_scene):
     #return md.Print('scene_input') >> control_scene
     #return control_scene
 
-def create_scenes():
-    scs = {}
-    for i, (name, page) in enumerate(sorted(fill_pages().items(), key=lambda x: x[0])):
-        print("index: {}; name: {}; page:".format(i, name))
-        for p in sorted(page):
-            print('{}: {}'.format(p, page[p]))
-        print('map:')
-        for m in akai.Map(page, yam):
-            print(m)
-        scs[i+1] = md.Scene(name, create_scene_wrapper(akai.Map(page, yam)))# index < 1 will crash mididings
-    return scs
 
-scenes = create_scenes()
+scenes = create_scenes(fill_pages(), akai, yam, create_scene)
 #print(scenes)
 
 # enable OSC Interface for livedings
