@@ -21,7 +21,9 @@ class Akai_MidiMix:
         self.sliders['master'] = ControlEvent(62, 0, 127)
 
     def ctrls(self):
-        return {**self.pots, **self.sliders}
+        ctrls = self.pots.copy()
+        ctrls.update(self.sliders)
+        return ctrls
 
     def Print(self):
         return [ev.filter >> md.Print(name) for ctrl in self.ctrls() for name, ev in ctrl.items()] #+ [md.Print('akai')]
