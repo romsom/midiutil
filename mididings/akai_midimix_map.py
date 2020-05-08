@@ -21,7 +21,7 @@ class Akai_MidiMix:
         self.sliders['master'] = ControlEvent(62, 0, 127)
 
     def ctrls(self):
-        return [self.pots, self.sliders]
+        return {**self.pots, **self.sliders}
 
     def Print(self):
         return [ev.filter >> md.Print(name) for ctrl in self.ctrls() for name, ev in ctrl.items()] #+ [md.Print('akai')]
@@ -29,4 +29,4 @@ class Akai_MidiMix:
     def Map(self, mapping, device):
         '''Map control events of this controller to generators of device using mapping information in mapping.'''
         params = device.parameters()
-        return [ev.filter >> params[mapping[name]].event(ev.min, ev.max) >> md.Print(mapping[name]) for ctrl in self.ctrls() for name, ev in ctrl.items() if name in mapping]
+        return [ev.filter >> params[mapping[name]].event(ev.min, ev.max) >> md.Print(mapping[name]) for name, ev in self.ctrls().items() if name in mapping]
