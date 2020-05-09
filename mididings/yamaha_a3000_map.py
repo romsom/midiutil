@@ -1,13 +1,20 @@
 import mididings as md
 
+def A3000_SysExFilter():
+    return md.SysExFilter([0xf0, 0x43]) # at the moment we can only match up to the last byte, pattern matching would be nice though
+
 def gen_remote_switch_sysex(ev, format):
     # not sure about 0x10: first nibble should be device ID, 0x03: (Manual: binary: 1, hex: 3 ...), length of data also not clear
-    return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x10, 0x58, 0x03, format & 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, ev.value, 0xf7])
+    if ev.value > 0x40:
+        val = 0x80 - ev.value
+    else:
+        val = 0x40 + ev.value
+    return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x10, 0x58, 0x03, format & 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, val, 0xf7])
 
 class A3000_RemoteSwitch:
     def __init__(self, number):
         self.number = number
-    def event(self):
+    def event(self, min=None, max=None):
         return md.Process(lambda ev: gen_remote_switch_sysex(ev, self.number))
 
 class A3000_RemoteControl:

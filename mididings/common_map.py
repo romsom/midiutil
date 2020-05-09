@@ -2,11 +2,19 @@ import mididings as md
 import time
 
 class ControlEvent:
-    def __init__(self, num, min, max):
+    def __init__(self, num, min = 0, max = 0x7f):
         self.filter = md.CtrlFilter(num)
         self.generator = md.Ctrl(num, md.EVENT_VALUE)
         self.min = min
         self.max = max
+
+class PitchbendEvent:
+    def __init__(self, min = 0, max = 0x7f):
+        self.filter = md.Filter(md.PITCHBEND)
+        self.generator = md.Pitchbend(md.EVENT_VALUE)
+        self.min = min
+        self.max = max
+
 def save_sysex(ev, prefix):
     if ev.type != md.SYSEX:
         print("Trying to dump non-sysex data. Check your filters!")
