@@ -26,5 +26,5 @@ class Akai_MidiMix:
         return ctrls
 
     def Print(self):
-        return [ev.filter >> md.Print(name) for ctrl in self.ctrls() for name, ev in ctrl.items()] #+ [md.Print('akai')]
+        return [ev.filter >> md.Print(name) for name, ev in self.ctrls().items()] #+ [md.Print('akai')]
 
