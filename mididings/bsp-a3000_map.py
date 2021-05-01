@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import mididings as md
 import mididings.extra.osc as mdosc
@@ -9,9 +9,9 @@ from common_map import SaveSysEx, map_events, create_scenes
 arturia = Arturia_BSP()
 yam_rc = A3000_RemoteControl()
 
-synth_port_pattern = r'(a2j:USB MIDI Interface.*MIDI 1)|(a2j:Ploytec.*: \[4\].*)'
-keys_port_pattern = r'(a2j:Axiom.*MIDI 1)|(a2j:RtMidi.*ebus_bridge)'
-control_port_pattern = r'a2j:Arturia BeatStep Pro.*MIDI 2'
+synth_port_pattern = r'(a2j:USB MIDI Interface.*MIDI 1)|(a2j:Ploytec.*: \[0\].*)'
+keys_port_pattern = r'(a2j:Axiom.*MIDI 1)|(a2j:RtMidi.*ebus_bridge)|(a2j:Arturia BeatStep Pro.*\(capture\).*MIDI 1)'  # BSP: Pads output
+control_port_pattern = r'a2j:Arturia BeatStep Pro.*MIDI 2'  # Mackie MCU output
 
 md.config(backend='jack',
           client_name='control-map',
@@ -19,7 +19,7 @@ md.config(backend='jack',
                     ('control_in', control_port_pattern),
                     ('synth_in', synth_port_pattern)],
           out_ports=[('keys_out', keys_port_pattern),
-                     ('control_out', control_port_pattern),
+                     # ('control_out', control_port_pattern),
                      ('synth_out', synth_port_pattern)])
 
 pages = {

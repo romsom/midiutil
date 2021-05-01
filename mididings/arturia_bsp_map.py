@@ -1,7 +1,7 @@
 import mididings as md
 from common_map import *
 
-
+# Control events for default Mackie MCU mode
 class Arturia_BSP:
     def __init__(self):
         self.encoders = {}
