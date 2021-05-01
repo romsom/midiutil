@@ -57,7 +57,7 @@ class YS200_Patch:
         
         # operator parameters
         for op in range(0,4):
-            op_ofs = 13 * (3-op) # operator offset
+            op_ofs = 13 * [3, 1, 2, 0][op] # operator offset
             # 0
             self.params['op{}_attack_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs, 31)
             self.params['op{}_decay1_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 1, 31)
