@@ -17,7 +17,7 @@ def gen_param_sysex(ev, group, parameter):
     return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x10, group, parameter, ev.value & 0x7f, 0xf7])
 def gen_dump_rq_sysex(ev, format, channel):
     ev.type = md.SYSEX
-    return md.event.SysExEvent(ev.port, [0xf0, 0x43, channel, format & 0x7f, 0xf7])
+    return md.event.SysExEvent(ev.port, [0xf0, 0x43, 0x20 | channel, format & 0x7f, 0xf7])
 def YS200_DumpRequest(format=0, channel=0):
     return md.Process(lambda ev: gen_dump_rq_sysex(ev, format, channel))
 def YS200_SysExFilter():

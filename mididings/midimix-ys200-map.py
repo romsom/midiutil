@@ -24,7 +24,7 @@ md.config(backend='jack',
                      ('control_out', control_port_pattern),
                      ('synth_out', synth_port_pattern)])
 
-control_switches = [md.KeyFilter(notes=[27]) >> (YS200_DumpRequest(0) >> md.Port('synth_out')),
+control_switches = [md.KeyFilter(notes=[27]) >> (YS200_DumpRequest(3) >> md.Port('synth_out')),
                     md.KeyFilter(notes=[25]) >> md.SceneSwitch(offset=-1),
                     md.KeyFilter(notes=[26]) >> md.SceneSwitch(offset=1)]
 
