@@ -57,7 +57,7 @@ def fill_pages():
     for op in range(0,4):
         ps['frequency']['pot_{}_0'.format(op)] = 'op{}_detune'.format(op+1)
         ps['frequency']['pot_{}_1'.format(op)] = 'op{}_frequency_range_fine'.format(op+1)
-        # ps['frequency']['pot_{}_2'.format(op)] = 'op{}_frequency_coarse'.format(op+1)
+        ps['frequency']['pot_{}_2'.format(op)] = 'op{}_frequency'.format(op+1)
     ps['frequency']['pot_6_0'.format(op)] = 'algorithm'
     # ps['frequency']['pot_6_1'.format(op)] = 'oscillator_key_sync'
     ps['frequency']['pot_6_2'.format(op)] = 'transpose'
