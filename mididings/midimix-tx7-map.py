@@ -11,8 +11,8 @@ akai = Akai_MidiMix()
 # for now we use only one patch
 yam = TX7_Patch()
 
-synth_port_pattern = r'(a2j:USB MIDI Interface.*MIDI 1)|(a2j:Ploytec.*: \[3\].*)'
-keys_port_pattern = r'(a2j:Axiom.*MIDI 1)|(a2j:RtMidi.*ebus_bridge)'
+synth_port_pattern = r'(a2j:USB MIDI Interface.*MIDI 1)|(a2j:Ploytec GM5.*: \[0\].*)'
+keys_port_pattern = r'(a2j:Axiom.*MIDI 1)|(a2j:RtMidi.*ebus_bridge)|(a2j:MIDIboxKB.*MIDI 1)'
 control_port_pattern = r'a2j:MIDI Mix.*MIDI 1'
 
 md.config(backend='jack',
