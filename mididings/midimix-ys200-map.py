@@ -128,7 +128,7 @@ def create_scene(control_scene):
     '''Create a complete scene from a control event list returned from map_events'''
     sc = [md.PortFilter('control_in') >> ~md.KeyFilter(notes=[25,26,27]) >> control_scene >> md.Port('synth_out'),
           md.PortFilter('keys_in') >> md.Print('keys') >> md.Port('synth_out'),
-          md.PortFilter('synth_in') >> md.Print('synth') >> YS200_SysExFilter() >> SaveSysEx('dx7_patch') >> md.Discard()]
+          md.PortFilter('synth_in') >> md.Print('synth') >> YS200_SysExFilter() >> SaveSysEx('ys200_patch') >> md.Discard()]
     return sc
     #return md.Print('scene_input') >> control_scene
     #return control_scene
