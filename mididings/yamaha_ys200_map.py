@@ -60,14 +60,14 @@ class YS200_Patch:
             op_ofs = 13 * (3-op) # operator offset
             # 0
             self.params['op{}_attack_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs, 31)
-            self.params['op{}_decay_1_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 1, 31)
-            self.params['op{}_decay_2_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 2, 31)
+            self.params['op{}_decay1_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 1, 31)
+            self.params['op{}_decay2_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 2, 31)
             self.params['op{}_release_rate'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 3, 15)
-            self.params['op{}_decay_1_level'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 4, 15)
+            self.params['op{}_decay1_level'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 4, 15)
             self.params['op{}_level_scaling'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 5, 99)
             self.params['op{}_rate_scaling'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 6, 3)
             self.params['op{}_eg_bias_sensitivity'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 7, 7)
-            self.params['op{}_amplitde_modulation_enable'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 8, 1)
+            self.params['op{}_amplitude_modulation_enable'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 8, 1)
             self.params['op{}_key_velocity_sensitivity'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 9, 7)
             self.params['op{}_operator_output_level'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 10, 99)
             self.params['op{}_frequency'.format(op+1)] = YS200_SXParamChange(4, 2, op_ofs + 11, 63)
@@ -122,11 +122,11 @@ class YS200_Patch:
         for op in range(0,4):
             op_ofs = 5 * (3-op) # operator offset
             # 0
-            self.params['op_{}_fixed_frequency'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs, 1)
-            self.params['op_{}_fixed_frequency_range'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 1, 7)
-            self.params['op_{}_frequency_range_fine'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 2, 15)
-            self.params['op_{}_waveform'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 3, 7)
-            self.params['op_{}_eg_shift'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 4, 3)
+            self.params['op{}_fixed_frequency'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs, 1)
+            self.params['op{}_fixed_frequency_range'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 1, 7)
+            self.params['op{}_frequency_range_fine'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 2, 15)
+            self.params['op{}_waveform'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 3, 7)
+            self.params['op{}_eg_shift'.format(op+1)] = YS200_SXParamChange(4, 3, op_ofs + 4, 3)
         self.params['reverb_rate'] = YS200_SXParamChange(4, 3, 20, 7)
         self.params['foot_controller_pitch'] = YS200_SXParamChange(4, 3, 21, 99)
         self.params['foot_controller_amplitude'] = YS200_SXParamChange(4, 3, 22, 99)
