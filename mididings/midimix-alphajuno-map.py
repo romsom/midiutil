@@ -25,8 +25,8 @@ md.config(backend='jack',
                      ('synth_out', synth_port_pattern)])
 
 control_switches = [# md.KeyFilter(notes=[27]) >> (AlphaJuno_DumpRequest(0) >> md.Port('synth_out')),
-                    md.KeyFilter(notes=[25]) >> md.SceneSwitch(offset=-1),
-                    md.KeyFilter(notes=[26]) >> md.SceneSwitch(offset=1)]
+    md.KeyFilter(notes=[25]) >> md.SceneSwitch(offset=-1),
+    md.KeyFilter(notes=[26]) >> md.SceneSwitch(offset=1)]
 
 control = md.PortFilter('control_in') >> md.Filter(md.NOTEON) >> control_switches #control = md.PortFilter('control_in') >> md.Print('control')
 
@@ -34,73 +34,69 @@ control = md.PortFilter('control_in') >> md.Filter(md.NOTEON) >> control_switche
 pre = None #md.Print('input') # bank/page buttons, solo button
 post = None #md.Print('output')
 
-def fill_pages():
-    """returns a dict of page descriptions.
-    These are dicts as well, that map input_controller_names to parameter_names"""
-    ps = {
-        '1: voice': {
-            'pot_0_0' : 'dco_range',
-            'pot_1_0' : 'dco_waveform_pulse',
-            'pot_2_0' : 'dco_waveform_sawtooth',
-            'pot_3_0' : 'dco_waveform_sub',
-            'pot_4_0' : 'dco_env_mode',
-            'pot_5_0' : 'dco_after_depth',
-            'pot_6_0' : 'dco_lfo_mod_depth',
-            'pot_7_0' : 'dco_env_mod_depth',
+ps = {
+    '1: voice': {
+        'pot_0_0' : 'dco_range',
+        'pot_1_0' : 'dco_waveform_pulse',
+        'pot_2_0' : 'dco_waveform_sawtooth',
+        'pot_3_0' : 'dco_waveform_sub',
+        'pot_4_0' : 'dco_env_mode',
+        'pot_5_0' : 'dco_after_depth',
+        'pot_6_0' : 'dco_lfo_mod_depth',
+        'pot_7_0' : 'dco_env_mod_depth',
 
-            'pot_0_1' : 'vcf_cutoff_freq',
-            'pot_1_1' : 'vcf_resonance',
-            'pot_2_1' : 'hpf_cutoff_freq',
-            'pot_3_1' : 'vcf_key_follow',
-            'pot_4_1' : 'vcf_env_mode',
-            'pot_5_1' : 'vcf_after_depth',
-            'pot_6_1' : 'vcf_lfo_mod_depth',
-            'pot_7_1' : 'vcf_env_mod_depth',
+        'pot_0_1' : 'vcf_cutoff_freq',
+        'pot_1_1' : 'vcf_resonance',
+        'pot_2_1' : 'hpf_cutoff_freq',
+        'pot_3_1' : 'vcf_key_follow',
+        'pot_4_1' : 'vcf_env_mode',
+        'pot_5_1' : 'vcf_after_depth',
+        'pot_6_1' : 'vcf_lfo_mod_depth',
+        'pot_7_1' : 'vcf_env_mod_depth',
 
-            'pot_0_2' : 'env_t1',
-            'pot_1_2' : 'env_t2',
-            'pot_2_2' : 'env_l3',
-            'pot_3_2' : 'env_t4',
+        'pot_0_2' : 'env_t1',
+        'pot_1_2' : 'env_t2',
+        'pot_2_2' : 'env_l3',
+        'pot_3_2' : 'env_t4',
 
-            'pot_4_2' : 'vca_env_mode',
-            'pot_5_2' : 'vca_after_depth',
-            'pot_6_2' : 'portamento',
-            'pot_7_2' : 'portamento_time',
+        'pot_4_2' : 'vca_env_mode',
+        'pot_5_2' : 'vca_after_depth',
+        'pot_6_2' : 'portamento',
+        'pot_7_2' : 'portamento_time',
 
 
-            'slider_0' : 'dco_sub_level',
-            'slider_1' : 'dco_noise_level',
-            'slider_2' : 'dco_pw_pwm_depth',
-            'slider_3' : 'dco_pwm_rate',
-            'slider_4' : 'lfo_rate',
-            'slider_5' : 'lfo_delay_time',
-            'slider_6' : 'chorus',
-            'slider_7' : 'chorus_rate',
-            'master'   : 'main_volume',
-        },
-        '2: env': {
-            'pot_0_0' : 'env_t1',
-            'pot_1_0' : 'env_t2',
-            'pot_2_0' : 'env_t3',
-            'pot_3_0' : 'env_t4',
-            'pot_4_0' : 'env_l1',
-            'pot_5_0' : 'env_l2',
-            'pot_6_0' : 'env_l3',
-            'pot_7_0' : 'env_key_follow',
+        'slider_0' : 'dco_sub_level',
+        'slider_1' : 'dco_noise_level',
+        'slider_2' : 'dco_pw_pwm_depth',
+        'slider_3' : 'dco_pwm_rate',
+        'slider_4' : 'lfo_rate',
+        'slider_5' : 'lfo_delay_time',
+        'slider_6' : 'chorus',
+        'slider_7' : 'chorus_rate',
+        'master'   : 'main_volume',
+    },
+    '2: env': {
+        'pot_0_0' : 'env_t1',
+        'pot_1_0' : 'env_t2',
+        'pot_2_0' : 'env_t3',
+        'pot_3_0' : 'env_t4',
+        'pot_4_0' : 'env_l1',
+        'pot_5_0' : 'env_l2',
+        'pot_6_0' : 'env_l3',
+        'pot_7_0' : 'env_key_follow',
 
 
-            'slider_0' : 'dco_sub_level',
-            'slider_1' : 'dco_noise_level',
-            'slider_2' : 'dco_pw_pwm_depth',
-            'slider_3' : 'dco_pwm_rate',
-            'slider_4' : 'lfo_rate',
-            'slider_5' : 'lfo_delay_time',
-            'slider_6' : 'chorus',
-            'slider_7' : 'chorus_rate',
-            'master'   : 'main_volume',
-        }
+        'slider_0' : 'dco_sub_level',
+        'slider_1' : 'dco_noise_level',
+        'slider_2' : 'dco_pw_pwm_depth',
+        'slider_3' : 'dco_pwm_rate',
+        'slider_4' : 'lfo_rate',
+        'slider_5' : 'lfo_delay_time',
+        'slider_6' : 'chorus',
+        'slider_7' : 'chorus_rate',
+        'master'   : 'main_volume',
     }
-    return ps
+}
 
 # controller mappings
 def create_scene(control_scene):
@@ -110,11 +106,11 @@ def create_scene(control_scene):
           # md.PortFilter('synth_in') >> md.Print('synth') >> TX7_SysExFilter() >> SaveSysEx('dx7_patch') >> md.Discard()]
           ]
     return sc
-    #return md.Print('scene_input') >> control_scene
-    #return control_scene
+#return md.Print('scene_input') >> control_scene
+#return control_scene
 
 
-scenes = create_scenes(fill_pages(), akai, rol, create_scene)
+scenes = create_scenes(ps, akai, rol, create_scene)
 #print(scenes)
 
 # enable OSC Interface for livedings
