@@ -1,0 +1,19 @@
+* Utils for MIDI Devices
+A framework based on mididings for control of hardware synths using generic MIDI hardware controllers.
+* Supported Devices
+| Category        | Device                | Status                                                 |
+|-----------------+-----------------------+--------------------------------------------------------|
+| Synth           | Yamaha DX7/TX7        | Control of all parameters via SysEx, PatchDump working |
+| Synth           | Roland Alpha Juno 1/2 | Control of all parameters via SysEx                    |
+| Sampler/Synth   | Yamaha A3000          | Control of front panel encoders via SysEx              |
+| Control Surface | Akai Midimix          | CCs for all faders and buttons mapped                  |
+| Control Surface | Arturia Beatstep Pro  | CCs for encoders in Mackie mode mapped                 |
+|                 |                       |                                                        |
+
+* Device Mapping Matrix
+The following table shows between which devices a mapping is implemented.
+|                      | Yamaha DX7/TX7 | Yamaha A3000                | Roland Alpha Juno |
+|----------------------+----------------+-----------------------------+-------------------|
+| Akai Midimix         | X              |                             | X                 |
+| Arturia Beatstep Pro |                | (Front panel encoders only) |                   |
+|                      |                |                             |                   |
