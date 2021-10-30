@@ -1,9 +1,33 @@
 * Utils for MIDI Devices
 A framework based on mididings for control of hardware synths using generic MIDI hardware controllers.
+
+* Usage
+There are three pieces of data/code for each mapping:
+  - Control surface messages are mapped to identifiers
+  - Synth/Sampler/Device parameter changes are also mapped to identifiers
+  - By mapping identifiers of control surface elements to identifiers of parameter changes, those elements can now be used to control the respective parameter of the device
+
+All these pieces are python scripts.
+The latter is the script to be executed to control the synth via the control surface.
+At the moment those scripts have the naming scheme =<control surface model>_<synth model>_map.py= (=_= and =-= are both used atm).
+The former two are provided in files which have the naming scheme =<manufacturer>_<model>.py=.
+
+When you want to run a mapping script you can change the regular expressions at the beginning of the script to match the Jack MIDI ports to which you have your controller, keyboard and synth connected to have them automatically connected to the script on startup.
+My setup uses these ports for the midimix-tx7-map e.g.,:
+#+begin_src python
+synth_port_pattern = r'(a2j:USB MIDI Interface.*MIDI 1)|(a2j:Ploytec GM5.*: \[0\].*)'
+keys_port_pattern = r'(a2j:Axiom.*MIDI 1)|(a2j:RtMidi.*ebus_bridge)|(a2j:MIDIboxKB.*MIDI 1)'
+control_port_pattern = r'a2j:MIDI Mix.*MIDI 1'
+#+end_src
+Or you can run the script as-is and manually connect the ports each time you execute the script.
+
+In the future I plan to have a user-wide config file, which assigns ports to devices, so they don't have to be hard coded into the scripts.
+
 * Supported Devices
 | Category        | Device                | Status                                                 |
 |-----------------+-----------------------+--------------------------------------------------------|
 | Synth           | Yamaha DX7/TX7        | Control of all parameters via SysEx, PatchDump working |
+| Synth           | Yamaha TX81z/YS200    | Control of all parameters via SysEx                    |
 | Synth           | Roland Alpha Juno 1/2 | Control of all parameters via SysEx                    |
 | Sampler/Synth   | Yamaha A3000          | Control of front panel encoders via SysEx              |
 | Control Surface | Akai Midimix          | CCs for all faders and buttons mapped                  |
@@ -12,8 +36,8 @@ A framework based on mididings for control of hardware synths using generic MIDI
 
 * Device Mapping Matrix
 The following table shows between which devices a mapping is implemented.
-|                      | Yamaha DX7/TX7 | Yamaha A3000                | Roland Alpha Juno |
-|----------------------+----------------+-----------------------------+-------------------|
-| Akai Midimix         | X              |                             | X                 |
-| Arturia Beatstep Pro |                | (Front panel encoders only) |                   |
-|                      |                |                             |                   |
+|                      | Yamaha DX7/TX7 | Yamaha TX81z/YS200 | Roland Alpha Juno | Yamaha A3000                |
+|----------------------+----------------+--------------------+-------------------+-----------------------------|
+| Akai Midimix         | X              | X                  | X                 |                             |
+| Arturia Beatstep Pro |                |                    |                   | (Front panel encoders only) |
+|                      |                |                    |                   |                             |
