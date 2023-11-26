@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demo Mixer</title>
+  <style>
+    .channel0 { grid-area: channel0; }
+    .channel1 { grid-area: channel1; }
+    .channel2 { grid-area: channel2; }
+    .channel3 { grid-area: channel3; }
+    .channel4 { grid-area: channel4; }
+    .channel5 { grid-area: channel5; }
+    .channel6 { grid-area: channel6; }
+    .channel7 { grid-area: channel7; }
+    .channel-strips {
+	display: grid;
+	grid-template-areas:
+	    'header header header header header header header header'
+	    'channel0 channel1 channel2 channel3 channel4 channel5 channel6 channel7';
+	gap: 10px;
+	background-color: #2196F3;
+	padding: 10px;
+    }
+    .channel-strips > div {
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+	padding: 20px 0;
+	font-size: 18px;
+	width: 110px;
+  </style>
+</head>
+<body>
+  <div class="channel-strips">
+    <div class="channel0">
+      <input type="text" value="Channel 1" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_0">
+      <br>
+      Channel 1
+    </div>
+    <div class="channel1">
+      <input type="text" value="Channel 2" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_1">
+      <br>
+      Channel 2
+    </div>
+    <div class="channel2">
+      <input type="text" value="Channel 3" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_2">
+      <br>
+      Channel 3
+    </div>
+    <div class="channel3">
+      <input type="text" value="Channel 4" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_3">
+      <br>
+      Channel 4
+    </div>
+    <div class="channel4">
+      <input type="text" value="Channel 5" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_4">
+      <br>
+      Channel 5
+    </div>
+    <div class="channel5">
+      <input type="text" value="Channel 6" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_5">
+      <br>
+      Channel 6
+    </div>
+    <div class="channel6">
+      <input type="text" value="Channel 7" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_6">
+      <br>
+      Channel 7
+    </div>
+    <div class="channel7">
+      <input type="text" value="Channel 8" size="8">
+      <br>
+      <input type="range" orient="vertical" min="0" max="16384" value="0" class="channel_volume" id="channel_volume_7">
+      <br>
+      Channel 8
+    </div>
+  </div>
+  <div class="master-section">
+  </div>
+</body>
+</html> 

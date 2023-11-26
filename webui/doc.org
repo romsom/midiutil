@@ -1,0 +1,5 @@
+* Name Ideas
+  - rcmcr: Remote Controlled MIDI Central R...
+  - motg: Midi On-The-Go
+  - cemec: Controll Every MIDI Equipment C...ly
+  - 
