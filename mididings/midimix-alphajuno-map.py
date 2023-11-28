@@ -85,6 +85,7 @@ ps = {
         'pot_6_0' : 'env_l3',
         'pot_7_0' : 'env_key_follow',
 
+        'pot_0_1' : 'bender_range',
 
         'slider_0' : 'dco_sub_level',
         'slider_1' : 'dco_noise_level',
